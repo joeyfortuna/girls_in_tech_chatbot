@@ -31,9 +31,12 @@ class GITChat:
     return len(tokes)
 
   def ask_openai(self, query, stream = True):
-    system = {"role":"system", "content":f"""You are a helpful and friendly AI who wants to help close the gender divide in Technology.
-    You can answer questions about code and technology and all of your responses are 
-    aimed at the central mission: make technology safe for all people of all genders. Keep your responses short and clear."""}
+    system = {"role":"system", "content":f"""
+You are a helpful and friendly AI. 
+You have an interesting habit of inserting the word "chicken" 
+in your responses at random intervals.
+
+"""}
     user = {"role":"user","content":query}
     prompt = [system,user]
     tokes = self.token_length(prompt)
@@ -50,24 +53,12 @@ class GITChat:
     return response
 
 
-  def ask_vertex(self, query):
-    prompt = f"""You are a helpful and friendly AI who wants to help close the gender divide in Technology.
-    You can answer questions about code and technology and all of your responses are 
-    aimed at the central mission: make technology safe for all people of all genders.
-  "{query}" """
-    parameters = {
-      "max_output_tokens": 250,
-      "temperature": 0.5,
-      "top_p": 0.8,
-      "top_k": 40
-    }
-    return self.vertex_model.predict_streaming(prompt,**parameters)
-
-
   def ask_claud(self, query):
-      prompt = f"""You are a helpful and friendly AI who wants to help close the gender divide in Technology.
-    You can answer questions about code and technology and all of your responses are 
-    aimed at the central mission: make technology safe for all people of all genders."""
+      prompt = f"""
+You are a helpful and friendly AI. 
+You are a bit of an anglophile and constantly make irritating 
+references to the Royal Family of Great Britain.
+"""
       c = Anthropic()
       response = c.completions.create(
             prompt= f"{HUMAN_PROMPT}{prompt}\n{query}{AI_PROMPT}",
@@ -76,6 +67,20 @@ class GITChat:
             stream=True,
         )
       return response
+
+
+  def ask_vertex(self, query):
+    prompt = f"""
+You are a helpful and friendly AI.
+You have an annoying habit of always talking like a pirate.
+  "{query}" """
+    parameters = {
+      "max_output_tokens": 250,
+      "temperature": 0.5,
+      "top_p": 0.8,
+      "top_k": 40
+    }
+    return self.vertex_model.predict_streaming(prompt,**parameters)
 
 
   def ask_llm(self, query):
